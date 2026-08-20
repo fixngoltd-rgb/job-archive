@@ -79,6 +79,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
 .jc-status.status-noresponse{background:#fee2e2;color:#991b1b;}
 .jc-status.status-scheduling{background:#f3e8ff;color:#6b21a8;}
 .jc-status.status-declined{background:#f1f5f9;color:#475569;}
+.jc-status.status-inprogress{background:#e0f2fe;color:#075985;}
+.jc-status.status-elsewhere{background:#fce7f3;color:#9d174d;}
 
 .jc-dates{
   display:flex;justify-content:space-between;font-size:0.78rem;color:var(--muted2);
@@ -184,6 +186,216 @@ const JOBS = [
     statusClass: "status-scheduling",
     firstContact: "13 Aug 2026",
     lastActivity: "19 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Ground Floor Room, 162 Malmesbury Road",
+    type: "Oven Install",
+    summary: "New oven couldn't be installed as the old one was hard-wired to a circuit that didn't match. Additional protection/circuit change needed. Old oven removed and disposed of.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "20 Jul 2026",
+    lastActivity: "21 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Flat 5, 49 Kelly Avenue, Peckham, London, SE15 5LB",
+    type: "Blocked Bath",
+    summary: "Bath unblocked (recurring issue from 12 months prior). Separate bath seal quote of £245 queried by Scott as expensive - he's a qualified plumber himself - escalated to landlord for a decision.",
+    status: "Completed - Seal Quote Queried",
+    statusClass: "status-pending",
+    firstContact: "23 Jul 2026",
+    lastActivity: "31 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "101 Rhondda Street, Swansea, SA1 6ET",
+    type: "Pest Control (Rats)",
+    summary: "HMO property, rats in the walls. Option 1 approved at £375 for initial treatment. Further issues found on site (garden, downpipe, pull cords, mould, sealant, toilet seat) quoted separately. Multi-visit job with 3 tenants needing coordinated access.",
+    status: "Ongoing - Multi-Visit",
+    statusClass: "status-inprogress",
+    firstContact: "24 Jul 2026",
+    lastActivity: "11 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "67 Bolton Road, Ashton-in-Makerfield",
+    type: "Bathroom Light Switch",
+    summary: "Pull cord light switch repaired and invoiced. Scott also confirmed new office address (111 Piccadilly, Manchester, M1 2HY) in this thread.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "27 Jul 2026",
+    lastActivity: "27 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "40 Bascombe Grove, Crayford, DA1 3RJ",
+    type: "Toilet Leaking Internally",
+    summary: "Toilet leaking internally, fixed. Tenants work for the NHS - shoe coverings required at all times on site to protect carpets.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "27 Jul 2026",
+    lastActivity: "27 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "19 Wordsworth Road, Manchester, M27 0SW",
+    type: "General",
+    summary: "Job originally arranged by Omer before he left the company. Confirmed completed.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "24 Jul 2026",
+    lastActivity: "27 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "24 Winifred Road, Hampton Hill, TW12 1AL",
+    type: "Leaking Windows",
+    summary: "4 windows leaking badly in rain. Quote provided, terms agreement signing delay resolved, works booked and completed for 13th June with photos sent to landlord.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "03 Jun 2026",
+    lastActivity: "16 Jun 2026"
+  },
+  {
+    agent: "Scott",
+    address: "3 Trencherbone, Radcliffe, M26 3WT",
+    type: "Electrics Tripping",
+    summary: "Electrics tripping throughout property, resolved same-day attendance arranged. Scott confirmed issue resolved.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "13 Aug 2026",
+    lastActivity: "19 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "315b Norwood Road, Tulse Hill, London, SE24 9QA",
+    type: "Sash Windows",
+    summary: "Large job, extensive scheduling saga around tenant access (tenants vacating 31 Aug). 50% deposit taken upfront, balance on completion to avoid payment delays like Spinners House. Booked for 22 Aug.",
+    status: "Booked - 22 Aug",
+    statusClass: "status-booked",
+    firstContact: "08 Jul 2026",
+    lastActivity: "19 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Apartment 208, Block B, Salford, M3 7DA",
+    type: "Door Handle",
+    summary: "Ex-tenant's door handle came away from door. £130 quote for refit approved. On attending, existing handle was fine to reuse rather than replace. Invoiced - Scott asked for PDF invoices going forward instead of Word docs.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "11 Aug 2026",
+    lastActivity: "20 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Apartment 7, 32 Mason Street, Manchester, M4 5EY",
+    type: "Window Handle/Hinges",
+    summary: "Window catching on frame. Quote revised from £440 to £370 for new hinges after landlord pushback. Approved - Scott asked for confirmation once completed.",
+    status: "Approved - Awaiting Completion",
+    statusClass: "status-inprogress",
+    firstContact: "24 Jul 2026",
+    lastActivity: "13 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Apartment 8, Savile Court, Huddersfield, HD3 4JT",
+    type: "Hob, Electrics & Leaks",
+    summary: "Hob replaced for £320 (matching No.19's job), hallway lights and internal door also addressed and invoiced. Separately, washing machine isolation valve and kitchen waste were reported leaking after the hob visit.",
+    status: "Hob Completed - Leaks Reported After",
+    statusClass: "status-inprogress",
+    firstContact: "04 Aug 2026",
+    lastActivity: "07 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "267 Bolton Road, Ashton-in-Makerfield, WN4 8TG",
+    type: "Bathroom Light Switch",
+    summary: "Faulty bathroom light switch reported for tenant Limy. Arranged same day.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "24 Jul 2026",
+    lastActivity: "24 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "3-bed HMO, Bolton, BL5",
+    type: "Fire Risk Assessment",
+    summary: "Quote provided for a Fire Risk Assessment. Landlord ended up arranging her own FRA instead, but Scott noted Fix & Go for any future ones needed.",
+    status: "Went Elsewhere",
+    statusClass: "status-elsewhere",
+    firstContact: "11 Aug 2026",
+    lastActivity: "18 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "16 Blenheim Way, Horspath, Oxford, OX33 1SB",
+    type: "No Hot Water",
+    summary: "Landlord had details of a previous contractor and asked for them to attend instead.",
+    status: "Went Elsewhere",
+    statusClass: "status-elsewhere",
+    firstContact: "30 May 2026",
+    lastActivity: "01 Jun 2026"
+  },
+  {
+    agent: "Scott",
+    address: "11 Beresford Street, M14 4SB",
+    type: "Leak",
+    summary: "Leak reported, photos sent through. Only tenant Amber to be contacted - the other tenant Jade explicitly not to be contacted per Scott.",
+    status: "Contacted Tenant",
+    statusClass: "status-scheduling",
+    firstContact: "19 Aug 2026",
+    lastActivity: "19 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "6 Burland Close, Salford, M7 2YW",
+    type: "Deep Clean & Repaint",
+    summary: "Vacant property, comprehensive quote for cleaning/decoration/minor repairs sent to landlord. Landlord appears to be taking management back - keys sent tracked to Peter Sheppard as instructed.",
+    status: "Handed Back to Landlord",
+    statusClass: "status-elsewhere",
+    firstContact: "20 Jul 2026",
+    lastActivity: "10 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "Flat 102, Heritage Court, Birmingham, B18 6HU",
+    type: "Fridge Freezer",
+    summary: "Quote requested to supply and fit a Beko BCFD473 fridge freezer, including removal of packaging and old appliance.",
+    status: "Quote Requested",
+    statusClass: "status-pending",
+    firstContact: "14 Aug 2026",
+    lastActivity: "14 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "82 Woodhouses Avenue, Manchester, M34 5YR",
+    type: "Washing Machine",
+    summary: "Quote for fitting and connecting an integrated washing machine (landlord supplying the unit), including disconnecting/removing the old one.",
+    status: "Quoted - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "09 Jul 2026",
+    lastActivity: "14 Jul 2026"
+  },
+  {
+    agent: "Scott",
+    address: "32 George Road, Halesowen, B63 4DE",
+    type: "Window Handle",
+    summary: "Faulty window handle. Initial £145 quote approved, later revised upward after further inspection. Scott informed the landlord and awaiting their response.",
+    status: "Revised Quote - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "17 Jul 2026",
+    lastActivity: "13 Aug 2026"
+  },
+  {
+    agent: "Scott",
+    address: "70 Union Road, Bolton, BL2 2DR",
+    type: "Electrical/Boiler Tripping",
+    summary: "Electrics tripping when boiler switched on. £115 callout approved. Involved coordinating with a separate gas engineer over several visits. Invoice sent, further quotation pending landlord decision.",
+    status: "Invoiced - Further Quote Pending",
+    statusClass: "status-pending",
+    firstContact: "07 Jul 2026",
+    lastActivity: "10 Jul 2026"
   }
 ];
 
