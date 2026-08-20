@@ -66,6 +66,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
   background:var(--s3);border:1px solid var(--border);padding:4px 9px;border-radius:5px;
   text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
 }
+.agent-subtotal{font-weight:700;color:var(--purple);font-size:0.95rem;white-space:nowrap;}
 .jc-address{font-size:1.05rem;font-weight:700;margin-bottom:8px;line-height:1.3;}
 .jc-summary{font-size:0.9rem;color:var(--muted);line-height:1.5;margin-bottom:14px;}
 
@@ -103,8 +104,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
 <div class="controls">
   <input id="search-box" type="text" placeholder="Search address, summary, agent...">
   <select id="agent-filter"><option value="">All Agents</option></select>
-  <select id="type-filter"><option value="">All Job Types</option></select>
-  <select id="status-filter"><option value="">All Statuses</option></select>
+  <span id="agent-subtotal" class="agent-subtotal"></span>
   <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
 </div>
 
@@ -1051,15 +1051,8 @@ const JOBS = [
 
 function populateFilters(){
   const agents = [...new Set(JOBS.map(j => j.agent))].sort();
-  const types = [...new Set(JOBS.map(j => j.type))].sort();
-  const statuses = [...new Set(JOBS.map(j => j.status))].sort();
-
   document.getElementById('agent-filter').innerHTML =
     '<option value="">All Agents</option>' + agents.map(a => `<option value="${a}">${a}</option>`).join('');
-  document.getElementById('type-filter').innerHTML =
-    '<option value="">All Job Types</option>' + types.map(t => `<option value="${t}">${t}</option>`).join('');
-  document.getElementById('status-filter').innerHTML =
-    '<option value="">All Statuses</option>' + statuses.map(s => `<option value="${s}">${s}</option>`).join('');
 }
 
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -1067,15 +1060,11 @@ function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&l
 function render(){
   const q = document.getElementById('search-box').value.toLowerCase();
   const agentF = document.getElementById('agent-filter').value;
-  const typeF = document.getElementById('type-filter').value;
-  const statusF = document.getElementById('status-filter').value;
 
   let filtered = JOBS.filter(j => {
     if(agentF && j.agent !== agentF) return false;
-    if(typeF && j.type !== typeF) return false;
-    if(statusF && j.status !== statusF) return false;
     if(q){
-      const haystack = `${j.agent} ${j.address} ${j.type} ${j.summary} ${j.status}`.toLowerCase();
+      const haystack = `${j.agent} ${j.address} ${j.summary} ${j.status}`.toLowerCase();
       if(!haystack.includes(q)) return false;
     }
     return true;
@@ -1083,6 +1072,14 @@ function render(){
 
   document.getElementById('job-count').textContent = `${JOBS.length} jobs total`;
   document.getElementById('results-info').textContent = `Showing ${filtered.length} of ${JOBS.length} jobs`;
+
+  const subtotalEl = document.getElementById('agent-subtotal');
+  if(agentF){
+    const count = JOBS.filter(j => j.agent === agentF).length;
+    subtotalEl.textContent = `${agentF} has sent ${count} job${count===1?'':'s'}`;
+  } else {
+    subtotalEl.textContent = '';
+  }
 
   const grid = document.getElementById('job-grid');
   if(!filtered.length){
@@ -1094,7 +1091,6 @@ function render(){
     <div class="job-card">
       <div class="jc-top">
         <span class="jc-agent">${escHtml(j.agent)}</span>
-        <span class="jc-type">${escHtml(j.type)}</span>
       </div>
       <div class="jc-address">${escHtml(j.address)}</div>
       <div class="jc-summary">${escHtml(j.summary)}</div>
@@ -1110,15 +1106,11 @@ function render(){
 function clearFilters(){
   document.getElementById('search-box').value = '';
   document.getElementById('agent-filter').value = '';
-  document.getElementById('type-filter').value = '';
-  document.getElementById('status-filter').value = '';
   render();
 }
 
 document.getElementById('search-box').addEventListener('input', render);
 document.getElementById('agent-filter').addEventListener('change', render);
-document.getElementById('type-filter').addEventListener('change', render);
-document.getElementById('status-filter').addEventListener('change', render);
 
 populateFilters();
 render();
