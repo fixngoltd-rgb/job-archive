@@ -67,6 +67,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
   text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
 }
 .agent-subtotal{font-weight:700;color:var(--purple);font-size:0.95rem;white-space:nowrap;}
+.invoice-stats{
+  display:flex;gap:24px;padding:14px 28px;background:var(--s1);border-bottom:1px solid var(--border);
+  font-size:0.9rem;font-weight:700;flex-wrap:wrap;
+}
+.invoice-stats span{color:var(--muted);}
+.invoice-stats b{color:var(--text);font-weight:800;}
+.invoice-stats .paid-amount{color:var(--green);}
+.jc-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.jc-badge{font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:5px;}
+.jc-badge.invoiced{background:#e0e7ff;color:#3730a3;}
+.jc-badge.paid{background:#dcfce7;color:#166534;}
 .jc-address{font-size:1.05rem;font-weight:700;margin-bottom:8px;line-height:1.3;}
 .jc-summary{font-size:0.9rem;color:var(--muted);line-height:1.5;margin-bottom:14px;}
 
@@ -109,6 +120,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
 </div>
 
 <div id="results-info"></div>
+<div id="invoice-stats" class="invoice-stats"></div>
 <div class="job-grid" id="job-grid"></div>
 
 <script>
@@ -125,7 +137,9 @@ const JOBS = [
     status: "Pending Decision",
     statusClass: "status-pending",
     firstContact: "06 Aug 2026",
-    lastActivity: "07 Aug 2026"
+    lastActivity: "07 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -135,7 +149,9 @@ const JOBS = [
     status: "No Response",
     statusClass: "status-noresponse",
     firstContact: "20 Jul 2026",
-    lastActivity: "21 Jul 2026"
+    lastActivity: "21 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -145,7 +161,9 @@ const JOBS = [
     status: "Completed - Remedial Declined",
     statusClass: "status-declined",
     firstContact: "16 Jul 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -155,7 +173,9 @@ const JOBS = [
     status: "Booked - 27 Aug, 1-5pm",
     statusClass: "status-booked",
     firstContact: "20 Jul 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -165,7 +185,9 @@ const JOBS = [
     status: "PAT Paid / Oven Quote Pending",
     statusClass: "status-pending",
     firstContact: "22 Jul 2026",
-    lastActivity: "29 Jul 2026"
+    lastActivity: "29 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -175,7 +197,9 @@ const JOBS = [
     status: "Booked - Fri 28 Aug",
     statusClass: "status-booked",
     firstContact: "30 Jul 2026",
-    lastActivity: "18 Aug 2026"
+    lastActivity: "18 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Veverly",
@@ -185,7 +209,9 @@ const JOBS = [
     status: "Scheduling",
     statusClass: "status-scheduling",
     firstContact: "13 Aug 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -195,7 +221,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "20 Jul 2026",
-    lastActivity: "21 Jul 2026"
+    lastActivity: "21 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -205,7 +233,9 @@ const JOBS = [
     status: "Completed - Seal Quote Queried",
     statusClass: "status-pending",
     firstContact: "23 Jul 2026",
-    lastActivity: "31 Jul 2026"
+    lastActivity: "31 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -215,7 +245,9 @@ const JOBS = [
     status: "Ongoing - Multi-Visit",
     statusClass: "status-inprogress",
     firstContact: "24 Jul 2026",
-    lastActivity: "11 Aug 2026"
+    lastActivity: "11 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -225,7 +257,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "27 Jul 2026",
-    lastActivity: "27 Jul 2026"
+    lastActivity: "27 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -235,7 +269,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "27 Jul 2026",
-    lastActivity: "27 Jul 2026"
+    lastActivity: "27 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -245,7 +281,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "24 Jul 2026",
-    lastActivity: "27 Jul 2026"
+    lastActivity: "27 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -255,7 +293,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "03 Jun 2026",
-    lastActivity: "16 Jun 2026"
+    lastActivity: "16 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -265,7 +305,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "13 Aug 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -275,7 +317,9 @@ const JOBS = [
     status: "Booked - 22 Aug",
     statusClass: "status-booked",
     firstContact: "08 Jul 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -285,7 +329,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "11 Aug 2026",
-    lastActivity: "20 Aug 2026"
+    lastActivity: "20 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -295,7 +341,9 @@ const JOBS = [
     status: "Approved - Awaiting Completion",
     statusClass: "status-inprogress",
     firstContact: "24 Jul 2026",
-    lastActivity: "13 Aug 2026"
+    lastActivity: "13 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -305,7 +353,9 @@ const JOBS = [
     status: "Hob Completed - Leaks Reported After",
     statusClass: "status-inprogress",
     firstContact: "04 Aug 2026",
-    lastActivity: "07 Aug 2026"
+    lastActivity: "07 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -315,7 +365,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "24 Jul 2026",
-    lastActivity: "24 Jul 2026"
+    lastActivity: "24 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -325,7 +377,9 @@ const JOBS = [
     status: "Went Elsewhere",
     statusClass: "status-elsewhere",
     firstContact: "11 Aug 2026",
-    lastActivity: "18 Aug 2026"
+    lastActivity: "18 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -335,7 +389,9 @@ const JOBS = [
     status: "Went Elsewhere",
     statusClass: "status-elsewhere",
     firstContact: "30 May 2026",
-    lastActivity: "01 Jun 2026"
+    lastActivity: "01 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -345,7 +401,9 @@ const JOBS = [
     status: "Contacted Tenant",
     statusClass: "status-scheduling",
     firstContact: "19 Aug 2026",
-    lastActivity: "19 Aug 2026"
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -355,7 +413,9 @@ const JOBS = [
     status: "Handed Back to Landlord",
     statusClass: "status-elsewhere",
     firstContact: "20 Jul 2026",
-    lastActivity: "10 Aug 2026"
+    lastActivity: "10 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -365,7 +425,9 @@ const JOBS = [
     status: "Quote Requested",
     statusClass: "status-pending",
     firstContact: "14 Aug 2026",
-    lastActivity: "14 Aug 2026"
+    lastActivity: "14 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -375,7 +437,9 @@ const JOBS = [
     status: "Quoted - Awaiting Landlord",
     statusClass: "status-pending",
     firstContact: "09 Jul 2026",
-    lastActivity: "14 Jul 2026"
+    lastActivity: "14 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -385,7 +449,9 @@ const JOBS = [
     status: "Revised Quote - Awaiting Landlord",
     statusClass: "status-pending",
     firstContact: "17 Jul 2026",
-    lastActivity: "13 Aug 2026"
+    lastActivity: "13 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Scott",
@@ -395,7 +461,9 @@ const JOBS = [
     status: "Invoiced - Further Quote Pending",
     statusClass: "status-pending",
     firstContact: "07 Jul 2026",
-    lastActivity: "10 Jul 2026"
+    lastActivity: "10 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -405,7 +473,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "16 Jul 2026",
-    lastActivity: "20 Jul 2026"
+    lastActivity: "20 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -415,7 +485,9 @@ const JOBS = [
     status: "Door Reported - Cylinder Quote Pending",
     statusClass: "status-pending",
     firstContact: "09 Jul 2026",
-    lastActivity: "17 Aug 2026"
+    lastActivity: "17 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -425,7 +497,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "11 Jun 2026",
-    lastActivity: "18 Jun 2026"
+    lastActivity: "18 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -435,7 +509,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "29 Jun 2026",
-    lastActivity: "03 Jul 2026"
+    lastActivity: "03 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -445,7 +521,9 @@ const JOBS = [
     status: "Ongoing - Multi-Issue",
     statusClass: "status-inprogress",
     firstContact: "16 Jun 2026",
-    lastActivity: "03 Aug 2026"
+    lastActivity: "03 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -455,7 +533,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "13 Jul 2026",
-    lastActivity: "15 Jul 2026"
+    lastActivity: "15 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -465,7 +545,9 @@ const JOBS = [
     status: "Quoted",
     statusClass: "status-pending",
     firstContact: "16 Jul 2026",
-    lastActivity: "31 Jul 2026"
+    lastActivity: "31 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -475,7 +557,9 @@ const JOBS = [
     status: "Completed - Fan Discussion Ongoing",
     statusClass: "status-inprogress",
     firstContact: "10 Jul 2026",
-    lastActivity: "28 Jul 2026"
+    lastActivity: "28 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -485,7 +569,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "21 May 2026",
-    lastActivity: "14 Aug 2026"
+    lastActivity: "14 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -495,7 +581,9 @@ const JOBS = [
     status: "Quoted",
     statusClass: "status-pending",
     firstContact: "21 Jul 2026",
-    lastActivity: "21 Jul 2026"
+    lastActivity: "21 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -505,7 +593,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "12 Jun 2026",
-    lastActivity: "24 Jun 2026"
+    lastActivity: "24 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -515,7 +605,9 @@ const JOBS = [
     status: "Ongoing - Multi-Issue",
     statusClass: "status-inprogress",
     firstContact: "12 Jun 2026",
-    lastActivity: "21 Jul 2026"
+    lastActivity: "21 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -525,7 +617,9 @@ const JOBS = [
     status: "Completed - Recurred Once",
     statusClass: "status-completed",
     firstContact: "05 Jun 2026",
-    lastActivity: "29 Jun 2026"
+    lastActivity: "29 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -535,7 +629,9 @@ const JOBS = [
     status: "Approved - In Progress",
     statusClass: "status-inprogress",
     firstContact: "01 Jul 2026",
-    lastActivity: "13 Jul 2026"
+    lastActivity: "13 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -545,7 +641,9 @@ const JOBS = [
     status: "Shower Completed - New Leak Booked",
     statusClass: "status-inprogress",
     firstContact: "10 Jun 2026",
-    lastActivity: "18 Aug 2026"
+    lastActivity: "18 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -555,7 +653,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "16 Jun 2026",
-    lastActivity: "18 Jun 2026"
+    lastActivity: "18 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -565,7 +665,9 @@ const JOBS = [
     status: "Quote Under Review",
     statusClass: "status-pending",
     firstContact: "17 Aug 2026",
-    lastActivity: "20 Aug 2026"
+    lastActivity: "20 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -575,7 +677,9 @@ const JOBS = [
     status: "Contacted",
     statusClass: "status-scheduling",
     firstContact: "17 Aug 2026",
-    lastActivity: "17 Aug 2026"
+    lastActivity: "17 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -585,7 +689,9 @@ const JOBS = [
     status: "Ongoing - Multi-Issue",
     statusClass: "status-inprogress",
     firstContact: "02 Jul 2026",
-    lastActivity: "21 Jul 2026"
+    lastActivity: "21 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -595,7 +701,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "26 Jun 2026",
-    lastActivity: "29 Jun 2026"
+    lastActivity: "29 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -605,7 +713,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "09 Jun 2026",
-    lastActivity: "11 Jun 2026"
+    lastActivity: "11 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -615,7 +725,9 @@ const JOBS = [
     status: "Resolved - No Visit Needed",
     statusClass: "status-completed",
     firstContact: "13 Jul 2026",
-    lastActivity: "14 Jul 2026"
+    lastActivity: "14 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -625,7 +737,9 @@ const JOBS = [
     status: "Quoted",
     statusClass: "status-pending",
     firstContact: "01 Jul 2026",
-    lastActivity: "01 Jul 2026"
+    lastActivity: "01 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -635,7 +749,9 @@ const JOBS = [
     status: "Ongoing",
     statusClass: "status-inprogress",
     firstContact: "18 Aug 2026",
-    lastActivity: "20 Aug 2026"
+    lastActivity: "20 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -645,7 +761,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "14 Aug 2026",
-    lastActivity: "18 Aug 2026"
+    lastActivity: "18 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -655,7 +773,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "29 Jun 2026",
-    lastActivity: "15 Jul 2026"
+    lastActivity: "15 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -665,7 +785,9 @@ const JOBS = [
     status: "Quoted - Awaiting Landlord",
     statusClass: "status-pending",
     firstContact: "14 Jul 2026",
-    lastActivity: "14 Jul 2026"
+    lastActivity: "14 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -675,7 +797,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "02 Jul 2026",
-    lastActivity: "15 Jul 2026"
+    lastActivity: "15 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -685,7 +809,9 @@ const JOBS = [
     status: "Quoted - Sent to Landlord",
     statusClass: "status-pending",
     firstContact: "24 Jun 2026",
-    lastActivity: "29 Jun 2026"
+    lastActivity: "29 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -695,7 +821,9 @@ const JOBS = [
     status: "Ongoing - Multi-Issue",
     statusClass: "status-inprogress",
     firstContact: "03 Aug 2026",
-    lastActivity: "06 Aug 2026"
+    lastActivity: "06 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -705,7 +833,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "22 May 2026",
-    lastActivity: "27 May 2026"
+    lastActivity: "27 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -715,7 +845,9 @@ const JOBS = [
     status: "Completed - Cost Queried",
     statusClass: "status-completed",
     firstContact: "05 Jun 2026",
-    lastActivity: "10 Jun 2026"
+    lastActivity: "10 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -725,7 +857,9 @@ const JOBS = [
     status: "Quote Requested",
     statusClass: "status-pending",
     firstContact: "16 Jul 2026",
-    lastActivity: "20 Jul 2026"
+    lastActivity: "20 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -735,7 +869,9 @@ const JOBS = [
     status: "Partially Completed - Rest Quoted",
     statusClass: "status-inprogress",
     firstContact: "26 May 2026",
-    lastActivity: "27 May 2026"
+    lastActivity: "27 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -745,7 +881,9 @@ const JOBS = [
     status: "New",
     statusClass: "status-scheduling",
     firstContact: "13 Aug 2026",
-    lastActivity: "13 Aug 2026"
+    lastActivity: "13 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -755,7 +893,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "27 May 2026",
-    lastActivity: "27 May 2026"
+    lastActivity: "27 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -765,7 +905,9 @@ const JOBS = [
     status: "Completed - Pricing Queried",
     statusClass: "status-completed",
     firstContact: "31 Jul 2026",
-    lastActivity: "03 Aug 2026"
+    lastActivity: "03 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -775,7 +917,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "17 Jun 2026",
-    lastActivity: "18 Jun 2026"
+    lastActivity: "18 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -785,7 +929,9 @@ const JOBS = [
     status: "Temp Fix Done - Replacement Quote Pending",
     statusClass: "status-pending",
     firstContact: "03 Aug 2026",
-    lastActivity: "12 Aug 2026"
+    lastActivity: "12 Aug 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Richard",
@@ -795,7 +941,9 @@ const JOBS = [
     status: "Quoted",
     statusClass: "status-pending",
     firstContact: "14 Jul 2026",
-    lastActivity: "15 Jul 2026"
+    lastActivity: "15 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -805,7 +953,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "07 May 2026",
-    lastActivity: "11 Jun 2026"
+    lastActivity: "11 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -815,7 +965,9 @@ const JOBS = [
     status: "Ongoing - Multi-Phase",
     statusClass: "status-inprogress",
     firstContact: "08 May 2026",
-    lastActivity: "02 Jun 2026"
+    lastActivity: "02 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -825,7 +977,9 @@ const JOBS = [
     status: "Quoted",
     statusClass: "status-pending",
     firstContact: "28 May 2026",
-    lastActivity: "30 Jun 2026"
+    lastActivity: "30 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -835,7 +989,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "01 May 2026",
-    lastActivity: "07 May 2026"
+    lastActivity: "07 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -845,7 +1001,9 @@ const JOBS = [
     status: "Partially Completed - LL Went Elsewhere",
     statusClass: "status-elsewhere",
     firstContact: "05 May 2026",
-    lastActivity: "26 Jun 2026"
+    lastActivity: "26 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -855,7 +1013,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "24 Jun 2026",
-    lastActivity: "25 Jun 2026"
+    lastActivity: "25 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -865,7 +1025,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "22 Jun 2026",
-    lastActivity: "01 Jul 2026"
+    lastActivity: "01 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -875,7 +1037,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "01 May 2026",
-    lastActivity: "18 May 2026"
+    lastActivity: "18 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -885,7 +1049,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "30 Apr 2026",
-    lastActivity: "30 Apr 2026"
+    lastActivity: "30 Apr 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -895,7 +1061,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "05 May 2026",
-    lastActivity: "03 Jun 2026"
+    lastActivity: "03 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -905,7 +1073,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "12 May 2026",
-    lastActivity: "29 May 2026"
+    lastActivity: "29 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -915,7 +1085,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "07 May 2026",
-    lastActivity: "19 May 2026"
+    lastActivity: "19 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -925,7 +1097,9 @@ const JOBS = [
     status: "Completed - Leak Investigated",
     statusClass: "status-completed",
     firstContact: "07 May 2026",
-    lastActivity: "23 Jun 2026"
+    lastActivity: "23 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -935,7 +1109,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "22 May 2026",
-    lastActivity: "22 May 2026"
+    lastActivity: "22 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -945,7 +1121,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "13 May 2026",
-    lastActivity: "08 Jun 2026"
+    lastActivity: "08 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -955,7 +1133,9 @@ const JOBS = [
     status: "Quote Requested",
     statusClass: "status-pending",
     firstContact: "12 Jun 2026",
-    lastActivity: "12 Jun 2026"
+    lastActivity: "12 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -965,7 +1145,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "26 May 2026",
-    lastActivity: "26 May 2026"
+    lastActivity: "26 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -975,7 +1157,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "12 May 2026",
-    lastActivity: "12 May 2026"
+    lastActivity: "12 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -985,7 +1169,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "18 May 2026",
-    lastActivity: "18 May 2026"
+    lastActivity: "18 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -995,7 +1181,9 @@ const JOBS = [
     status: "Cancelled - Property Mix-Up",
     statusClass: "status-elsewhere",
     firstContact: "28 May 2026",
-    lastActivity: "28 May 2026"
+    lastActivity: "28 May 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -1005,7 +1193,9 @@ const JOBS = [
     status: "Handed Over to Scott",
     statusClass: "status-elsewhere",
     firstContact: "12 Jun 2026",
-    lastActivity: "01 Jul 2026"
+    lastActivity: "01 Jul 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -1015,7 +1205,9 @@ const JOBS = [
     status: "Completed - Pricing Disputed",
     statusClass: "status-completed",
     firstContact: "20 May 2026",
-    lastActivity: "09 Jun 2026"
+    lastActivity: "09 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -1025,7 +1217,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "29 May 2026",
-    lastActivity: "02 Jun 2026"
+    lastActivity: "02 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -1035,7 +1229,9 @@ const JOBS = [
     status: "Completed",
     statusClass: "status-completed",
     firstContact: "02 Jun 2026",
-    lastActivity: "09 Jun 2026"
+    lastActivity: "09 Jun 2026",
+    invoiced: false,
+    paid: null
   },
   {
     agent: "Omer",
@@ -1045,7 +1241,702 @@ const JOBS = [
     status: "Ongoing",
     statusClass: "status-inprogress",
     firstContact: "05 May 2026",
-    lastActivity: "01 Jun 2026"
+    lastActivity: "01 Jun 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "1 Brynhyfryd Street, Swansea, SA5 9LP",
+    summary: "Query about whether a light fitting was suitable for bathroom use (IP rating). Advised, tenant confirmed it wasn't and request was closed.",
+    status: "Closed - No Work Needed",
+    statusClass: "status-completed",
+    firstContact: "22 Jul 2026",
+    lastActivity: "23 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "1 Kingdom Apartments, Station Road, Methley, LS26 9EA",
+    summary: "Single spur plug socket needed for new washing machine. Found signs of a previous leak affecting the cabinet, electrical connection rerouted into a waterproof enclosure. Invoiced £135.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "27 Jul 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "14 Cecil House, Chingford Road, E17 5AQ",
+    summary: "Urgent leak from toilet affecting communal hallway, £200 approved. Turned out to be a busted waste pipe behind bathroom tiles - bigger job than expected, fixed same day. Separate flooring quote (repair or replace) also sent.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "03 Jun 2026",
+    lastActivity: "04 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "147 Broadlea Terrace, Leeds, LS13 2SJ",
+    summary: "Shower thermostatic mixer not working, tenant unable to control water temperature. Fixed and confirmed working. Invoice paid same day it was sent.",
+    status: "Completed & Paid",
+    statusClass: "status-completed",
+    firstContact: "05 Jun 2026",
+    lastActivity: "11 Jun 2026",
+    invoiced: true,
+    paid: "Paid same day"
+  },
+  {
+    agent: "Chelsea",
+    address: "16 Allen Street, Chester le Street, DH3 3JG",
+    summary: "Multiple issues: leak, taps, hot water (Baxi Combi 80e boiler). Washing machine pipe leak and hot water/tap issue fixed. Landlord queried the smoke alarm quote as excessive for a battery unit vs hardwired - awaiting their alternative.",
+    status: "Mostly Completed - Alarm Quote Disputed",
+    statusClass: "status-inprogress",
+    firstContact: "23 Jul 2026",
+    lastActivity: "05 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "16 The Wharf, New Crane Street, Chester, CH1 4HZ",
+    summary: "Toilet not flushing, £200 budget. Fixed and invoiced. £200 payment later confirmed received directly from the landlady.",
+    status: "Completed & Paid",
+    statusClass: "status-completed",
+    firstContact: "18 Jun 2026",
+    lastActivity: "24 Jun 2026",
+    invoiced: true,
+    paid: "£200 confirmed received"
+  },
+  {
+    agent: "Chelsea",
+    address: "17 Coursewall Street, Liverpool, L7 6NX",
+    summary: "Bath reseal and damp inspection behind a lounge bookshelf, quoted £170. Landlord queried the price, clarified and approved. Tenant details obtained to book in.",
+    status: "Approved - Booking In Progress",
+    statusClass: "status-inprogress",
+    firstContact: "06 May 2026",
+    lastActivity: "14 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "19 Olive Road, Neston, CH64 9PL",
+    summary: "Door knob and stair chair spindle repair, callout £70, work capped at £200. Ended up more involved than expected but stayed in budget. Landlord described as 'outstanding' and very happy with the quality.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "12 May 2026",
+    lastActivity: "18 May 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "20 Hepworth Gardens, Wakefield, WF1 3FH",
+    summary: "Front door handle jammed, fixed same day as emergency. Months later, separate noisy boiler (Ideal Logic Heat H12) investigated - found likely gas valve fault, part ordered and repaired, avoiding a landlord call-out cost.",
+    status: "Completed (x2 jobs)",
+    statusClass: "status-completed",
+    firstContact: "18 May 2026",
+    lastActivity: "22 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "21 Richmond Street, Castleford, WF10 4EF",
+    summary: "Boiler in loft plus broken stairs (cut incorrectly) needing joiner + heating engineer, £200 budget, went over with approval. Broken drain pipe also found and quoted. Boiler later returned with an E01 fault - repair and replacement options quoted.",
+    status: "Completed - Boiler Options Pending",
+    statusClass: "status-inprogress",
+    firstContact: "28 May 2026",
+    lastActivity: "05 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "22 Allerton Grange Croft, LS8 1RN",
+    summary: "Vokera combi boiler leaking water - urgent. Tested for 30 mins, no active leak found during test despite signs of prior leakage.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "04 Aug 2026",
+    lastActivity: "05 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "25 Wheatfield View, Birmingham, B31 5SW",
+    summary: "Bathroom window handle and other issues, £200 budget, completed. Separately, weeks later, a loose toilet seat found to be missing a part - new seat supplied and fitted.",
+    status: "Completed (x2 jobs)",
+    statusClass: "status-completed",
+    firstContact: "05 Jun 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "3 Riverside, Wirral, CH62 4UH",
+    summary: "Garden gate lock replacement - extended negotiation over cost (£210 initial quote queried as too expensive by landlord). Settled on a cheaper padlock-latch option after several rounds of clarification.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "18 May 2026",
+    lastActivity: "18 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "34 Cedarhurst, Birmingham, B32 2JZ",
+    summary: "Window handle, loose tiles, and a hole reported via inspection report. Quote sent for door handle, window handle repair/replacement, and tile fix - sent to landlord for approval.",
+    status: "Quoted - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "03 Aug 2026",
+    lastActivity: "04 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "36 Bonaire, Gotts Road, Leeds, LS12 1DL",
+    summary: "Bath and floorboard gap works, quoted £175. Long scheduling saga (tenant emergencies, trade injury/A&E visit) pushed the job back several weeks before completion. Separate carpet repair also raised.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "07 Jul 2026",
+    lastActivity: "03 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "39 Harrowby Road, Birkenhead, CH42 7HS",
+    summary: "Long-running damp/humidistat fan job tied to an April damp survey. £120 assessment invoiced. Landlord requested a fully itemised quote separating causes - detailed breakdown sent covering ventilation, external repairs, and decoration.",
+    status: "Itemised Quote Sent - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "06 May 2026",
+    lastActivity: "19 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "4 Chapel Court, Leeds, LS25 4BF",
+    summary: "Ceiling leak investigated (no visible pooling), traced to failed shower tray silicone and fixed. Separately, a wall damage quote (sand/repaint/plaster/skirting) was later revised down after tenant photos showed replastering likely wasn't needed - approved and booking in progress.",
+    status: "Leak Completed - Wall Repair Booking",
+    statusClass: "status-inprogress",
+    firstContact: "17 Jul 2026",
+    lastActivity: "18 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "42 Westminster Road, Broughton, Chester, CH4 0RZ",
+    summary: "Inspection report received with photos of flagged issues. Confirmed work would be sorted within budget, anything over quoted separately.",
+    status: "In Progress",
+    statusClass: "status-inprogress",
+    firstContact: "12 Aug 2026",
+    lastActivity: "14 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "44 The Boulevard, Chester, CH4 0SW",
+    summary: "Urgent bath leak causing electrics to trip, no power for tenant. Emergency plumber and electrician both arranged, resolved same day by 5pm.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "01 Aug 2026",
+    lastActivity: "03 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "5 John Street, Nuneaton, CV10 7EA",
+    summary: "Leak into kitchen ceiling when shower above is used. Investigated and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "17 Aug 2026",
+    lastActivity: "18 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "5 Wykebeck Place, Leeds, LS9 0ET",
+    summary: "Slow leak into kitchen ceiling directly below the shower enclosure. Tenants contacted, booking in progress.",
+    status: "Contacted - Booking In Progress",
+    statusClass: "status-scheduling",
+    firstContact: "18 Aug 2026",
+    lastActivity: "18 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "54 Echo Central One, Cross Green Lane, Leeds, LS9 8FG",
+    summary: "Apartment fire door survey flagged an issue - quote sent and approved, completed. Separately, months later, an oven tripping the fuseboard after 20-30 mins was investigated and invoiced.",
+    status: "Completed (x2 jobs)",
+    statusClass: "status-completed",
+    firstContact: "27 May 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "55 Rowood Drive, Solihull, B92 9NG",
+    summary: "Bathroom door handle/lock repair/replacement. Completed and invoiced. Months later, a mix-up was clarified - the handle replaced matched the photo sent, though it turned out to be a bedroom door; landlord later asked how many keys were supplied with the lock.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "18 May 2026",
+    lastActivity: "18 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "64 Windermere Road, Wistaston, Crewe, CW2 8RH",
+    summary: "Leak reported, £200-250 approved. Completed and invoiced at £170.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "10 Aug 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "7 Arless Way, Birmingham, B17 0RD",
+    summary: "Blocked drain from washing machine waste pipe, plus mould around windows flagged as urgent given a child living there. Landlord asked to hold off most works and only proceed with a £165 jet wash - washing machine fixed, but mould/other issues shelved as landlord arranged their own mould contractor.",
+    status: "Partially Completed - LL Handling Mould Separately",
+    statusClass: "status-elsewhere",
+    firstContact: "18 May 2026",
+    lastActivity: "30 May 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "7 Vincent Street, Stoke-on-Trent, ST1 6PW",
+    summary: "Front door sticking/damaged, £200 budget. On investigation found back door also faulty, 2 windows needing gearbox repairs. Tenants got locked out with pets inside mid-job - emergency locksmith dispatched, found door badly cracked with an incorrectly fitted lock, full mechanism replacement done. Landlord now supplying replacement doors (uPVC), Fix & Go to handle installation. A new leak (bathroom, affecting kitchen worktops) reported most recently.",
+    status: "Ongoing - Major Multi-Issue Property",
+    statusClass: "status-inprogress",
+    firstContact: "11 Aug 2026",
+    lastActivity: "20 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "75 Cedar Road, Burntwood, WS7 4RU",
+    summary: "Smoke alarm work, invoiced and completed.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "17 Jul 2026",
+    lastActivity: "20 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "8 Coventry Road, Liverpool, L15 9HR",
+    summary: "Inspection requested, £200 budget confirmed. Major findings: guttering heavily clogged with pigeon droppings/nests near solar panels, fascia and brickwork issues. Detailed quote sent for repointing, mesh, guttering and fascia - sent to landlord for approval.",
+    status: "Quoted - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "10 Aug 2026",
+    lastActivity: "14 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "86 Bradford Place, Chester, CH4 7DG",
+    summary: "Bath plug mechanism and drainage issues, £200 budget wasn't enough - drainage prioritised as possible leak. Completed, then a follow-up quote sent for bath resealing and mould treatment.",
+    status: "Completed - Further Quote Sent",
+    statusClass: "status-completed",
+    firstContact: "04 Aug 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "97 Stanks Drive, Leeds, LS14 5NS",
+    summary: "Ceiling paint/stain block quote for water-damaged ceiling, approved and completed.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "10 Jun 2026",
+    lastActivity: "17 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "98 Echo Central, Cross Green Lane, Leeds, LS9 8FH",
+    summary: "Multiple issues (door threshold, leaking shower, hot water, skirting), £200 initial budget. Extended saga - oven issue paused pending landlord info, hot water traced to a faulty immersion timer, shower/skirting completed in stages. Landlord briefly considered doing works herself before confirming to proceed.",
+    status: "Completed - Multi-Phase",
+    statusClass: "status-completed",
+    firstContact: "18 Jun 2026",
+    lastActivity: "22 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Apartment 10, The Old School House, Prenton, CH43 2JD",
+    summary: "Maintenance issues reported by tenant, booked and completed. Bath quote query clarified - works only proceeded after approval was received, per process.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "02 Jun 2026",
+    lastActivity: "17 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Apartment 171, Spinners House, Textile Street, Dewsbury, WF13 2EY",
+    summary: "Major job: new Gledhill Pro Lite 120 unvented cylinder (upgraded from originally quoted Ideal), £1,950, including removal of old unit. Long payment chase followed - landlord proposed splitting payment over 2 months, eventually settled as 50% upfront + remainder, with Sean personally transferring an outstanding £561.44 balance from the business account after the agreed plan wasn't fully honoured.",
+    status: "Completed - Payment Chase Resolved",
+    statusClass: "status-completed",
+    firstContact: "25 Jun 2026",
+    lastActivity: "10 Aug 2026",
+    invoiced: true,
+    paid: "£1,950 - paid in stages, final balance settled 10 Aug"
+  },
+  {
+    agent: "Chelsea",
+    address: "Apartment 6, The Apex, 152 Withington Road, Manchester, M16 8FB",
+    summary: "Front door handle fallen off, kitchen/living room door handle sheared off. Completed and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "17 Jul 2026",
+    lastActivity: "20 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Apartment 7, Broad Oak House, 29 Brackley Road, Manchester, M30 9LG",
+    summary: "Leak likely from integrated washing machine/dishwasher plumbing, slightly over budget but resolved. Loose kitchen mixer tap also repaired (base was loose, not superglue as tenant assumed) - some back-and-forth confirming the fix held.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "10 Jul 2026",
+    lastActivity: "20 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Crack in Front Door (address not fully specified in thread)",
+    summary: "Substantial crack in front door panel. Two repair options quoted (repair + partial repaint, or fuller repaint with possible colour mismatch). Landlord approved Option 2 and confirmed the paint colour shown.",
+    status: "Approved - Booking In Progress",
+    statusClass: "status-inprogress",
+    firstContact: "22 Jul 2026",
+    lastActivity: "23 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 12, Grange Court, North Grange Mount, Leeds, LS6 2BZ",
+    summary: "Urgent - tenants without power after a socket sparked/burnt out (found to be wrong spec for load). Fixed same day. Mould/black marks found under a window during that visit - quote approved, booking delayed by tenant move-out then rescheduled.",
+    status: "Electrical Completed - Mould Job Rescheduled",
+    statusClass: "status-inprogress",
+    firstContact: "03 Aug 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 17, Meanwood Heights, 433a Meanwood Road, Leeds, LS7 2SW",
+    summary: "Damp/mould survey requested around a water cylinder cupboard. Missed first appointment (contractor medical emergency) caused real frustration - rebooked, and once on site tenants insisted on a full survey rather than the partial one quoted. Findings mostly linked to ventilation/lifestyle factors rather than structural damp. Full and reduced-scope remedial quotes both provided.",
+    status: "Survey Completed - Quote Under Review",
+    statusClass: "status-pending",
+    firstContact: "05 Aug 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 17, Meanwood Heights - LS7 2SW (bathroom lock)",
+    summary: "Separate earlier job at same building - bathroom door had no lock/latch at all. Landlord rejected the first quote as too expensive; a simpler slide-latch style was quoted instead and sent for approval.",
+    status: "Quoted - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "18 May 2026",
+    lastActivity: "21 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 2, 12 Ward End Close",
+    summary: "Faulty thermostatic radiator valve (TRV) on a Worcester Greenstar Junior 28i. Landlord queried whether the full valve or just the head needed replacing - clarified, approved, and booked in.",
+    status: "Approved - Booked In",
+    statusClass: "status-inprogress",
+    firstContact: "07 May 2026",
+    lastActivity: "12 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 66, Block B, Victoria Riverside, Atkinson Street, Hunslet, Leeds, LS10 1EU",
+    summary: "Front door handle and both bathroom extractor fans not working. Completed and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "23 Jul 2026",
+    lastActivity: "28 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 3, 83 Granville Park, Lewisham, SE13 7DW",
+    summary: "Emergency work completed - a CO2 alarm needing replacement, as reported by tenant. Invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "13 May 2026",
+    lastActivity: "13 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Pest - Rats, 39 Harrowby Road, Birkenhead, CH42 7HS",
+    summary: "Rats reported inside the property, treatment and prevention works quoted (3-visit rodent treatment, £375). Approved by landlord, tenant contact obtained to arrange access.",
+    status: "Approved - Booking In Progress",
+    statusClass: "status-inprogress",
+    firstContact: "18 Aug 2026",
+    lastActivity: "19 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Quote needed for a replacement fridge freezer, Flat 102, Heritage Court, Birmingham, B18 6HU",
+    summary: "Beko BCFD473 fridge freezer supply and fit request. Landlord ended up closing this request down.",
+    status: "Cancelled - Landlord Closed Request",
+    statusClass: "status-elsewhere",
+    firstContact: "14 Aug 2026",
+    lastActivity: "17 Aug 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Replacement Manhole Cover (address not specified in thread)",
+    summary: "Desktop quote requested for a manhole cover replacement. Measurement discrepancy (52x52 non-standard) meant tenant was asked to re-measure the cover itself rather than the outer opening.",
+    status: "Measurement Clarification In Progress",
+    statusClass: "status-pending",
+    firstContact: "21 Jul 2026",
+    lastActivity: "22 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Urgent: Front Door Broken (address not specified in thread)",
+    summary: "Urgent broken front door, forwarded from tenant. Job booked same day as reported.",
+    status: "Booked",
+    statusClass: "status-scheduling",
+    firstContact: "27 May 2026",
+    lastActivity: "28 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 47, Weavers Brook, HX2 8NF",
+    summary: "Work completed and invoiced at £200. Bathroom sink later found blocked separately - tenant hard to reach by phone, contacted via WhatsApp instead. Hot water switch (always left on) also flagged for an electrician to inspect.",
+    status: "Completed - Follow-Up Job In Progress",
+    statusClass: "status-inprogress",
+    firstContact: "09 Jun 2026",
+    lastActivity: "17 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "270 West Point, Wellington Street, Leeds, LS1 4JT",
+    summary: "Urgent leak reported by downstairs tenant, water supply isolated by tenant before attendance. 4-hour emergency plumbing job, resolved and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "11 Jun 2026",
+    lastActivity: "11 Jun 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Room 2, 72 Rowland Close, Warrington, WA2 0DQ",
+    summary: "Empty room, key safe access. Investigated a communal leak and found 3 separate causes (electric shower inlet, bath silicone missing, bath trap). All fixed. Separate curtain rail/plaster repair (£190) approved once the roller blind option proved unobtainable.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "06 Aug 2026",
+    lastActivity: "13 Aug 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "16 The Wharf, New Crane Street, Chester, CH1 4HZ (payment query)",
+    summary: "Landlady queried whether payment had been sent directly - confirmed no direct contact had occurred, then a £200 payment was received from her shortly after.",
+    status: "Paid",
+    statusClass: "status-completed",
+    firstContact: "24 Jun 2026",
+    lastActivity: "25 Jun 2026",
+    invoiced: false,
+    paid: "£200 confirmed received"
+  },
+  {
+    agent: "Chelsea",
+    address: "2 Ash Dene Crescent, Pudsey, LS28 8NS",
+    summary: "Cupboard door pull-out lid issue, invoiced at £125. Chelsea confirmed payment planned for 8th August.",
+    status: "Completed - Payment Planned",
+    statusClass: "status-completed",
+    firstContact: "29 Jul 2026",
+    lastActivity: "05 Aug 2026",
+    invoiced: true,
+    paid: "Planned for 8 Aug"
+  },
+  {
+    agent: "Chelsea",
+    address: "55 Rowood Drive, Solihull, B92 9NG (2 further locks)",
+    summary: "Additional quote for 2 more locks at the same property reported by tenants, following the earlier door lock job. Landlord declined this additional quote.",
+    status: "Declined by Landlord",
+    statusClass: "status-elsewhere",
+    firstContact: "20 May 2026",
+    lastActivity: "20 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 3, London SE13 7DW (Electric Shower)",
+    summary: "Old electric shower (c.2006, discontinued style) investigated. 4 replacement options provided ranging from budget to premium. Landlord asked to hold off pending further review.",
+    status: "On Hold - Awaiting Landlord",
+    statusClass: "status-pending",
+    firstContact: "13 May 2026",
+    lastActivity: "19 May 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "25 Norfolk Street, Liverpool, L1 0BE",
+    summary: "Two issues raised: kitchen cabinet door, and a post box query (flat-issued PO box, not a standard front-door slot - some units on the block appear mismatched). Cabinet door repair approved to proceed; post box likely needs building management involvement.",
+    status: "Cabinet Approved - Post Box Query Ongoing",
+    statusClass: "status-inprogress",
+    firstContact: "01 Jun 2026",
+    lastActivity: "01 Jun 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "7 Haddon Road, Leeds, LS4 2JE",
+    summary: "Job completed and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "26 May 2026",
+    lastActivity: "29 May 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "141 Birkbeck Road, Sidcup, DA14 4DJ (electrics)",
+    summary: "Electrics fault - traced to an incorrectly wired outside socket. Fixed same day.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "02 Jun 2026",
+    lastActivity: "03 Jun 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "12B Tapton House Road, Sheffield, S10",
+    summary: "Faulty door mechanism, locksmith dispatched. Replaced and tenants confirmed proper locking.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "19 Jun 2026",
+    lastActivity: "19 Jun 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "1 South Rd, Smethwick, B67 7DB",
+    summary: "Cold water issue reported, resolved itself before attendance was needed (tenant confirmed water was back on) - ticket closed, no work carried out.",
+    status: "Closed - No Work Needed",
+    statusClass: "status-completed",
+    firstContact: "13 Jul 2026",
+    lastActivity: "16 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "224 Elisabeth Mill, Elisabeth Gardens, Stockport, SK5 6FU",
+    summary: "Fridge issue, completed and invoiced.",
+    status: "Completed",
+    statusClass: "status-completed",
+    firstContact: "22 Jul 2026",
+    lastActivity: "27 Jul 2026",
+    invoiced: true,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "3 Beech Court, Walsall, WS1 2NQ",
+    summary: "Bush 60cm double oven with hob - repair attempted first at landlord's request before replacement, hob ring found completely failed during the attempt. Landlord asked to waive the repair callout given a replacement was always likely - agreed to waive if the replacement quote was accepted, but it wasn't, so a refund was issued via credit note instead.",
+    status: "Repair Attempted - Refunded",
+    statusClass: "status-elsewhere",
+    firstContact: "06 Jul 2026",
+    lastActivity: "27 Jul 2026",
+    invoiced: true,
+    paid: "Refunded via credit note"
+  },
+  {
+    agent: "Chelsea",
+    address: "Apartment 129, Liverpool, L3 9BW",
+    summary: "Tenant details obtained for a reported issue - no further detail visible in this thread.",
+    status: "Details Obtained",
+    statusClass: "status-scheduling",
+    firstContact: "09 Jul 2026",
+    lastActivity: "09 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "Flat 3, London SE13 7DW (further works)",
+    summary: "Follow-up ticket at the same property as the electric shower job - door does not close properly from outside, locking mechanism also faulty. Landlord comparing quotes.",
+    status: "Quoted - Landlord Comparing Options",
+    statusClass: "status-pending",
+    firstContact: "09 Jul 2026",
+    lastActivity: "10 Jul 2026",
+    invoiced: false,
+    paid: null
+  },
+  {
+    agent: "Chelsea",
+    address: "1 South Rd, Smethwick, B67 7DB (2nd ticket, unrelated)",
+    summary: "Separate ticket for the same property, no further detail visible beyond initial assignment.",
+    status: "Unclear - Needs Follow-Up",
+    statusClass: "status-pending",
+    firstContact: "16 Jul 2026",
+    lastActivity: "16 Jul 2026",
+    invoiced: false,
+    paid: null
   }
 ];
 
@@ -1081,6 +1972,13 @@ function render(){
     subtotalEl.textContent = '';
   }
 
+  const invoicedCount = filtered.filter(j => j.invoiced).length;
+  const paidJobs = filtered.filter(j => j.paid);
+  document.getElementById('invoice-stats').innerHTML = `
+    <span>Invoiced: <b>${invoicedCount}</b></span>
+    <span>Confirmed Paid: <b class="paid-amount">${paidJobs.length}</b>${paidJobs.length ? ' (' + paidJobs.map(j => escHtml(j.paid)).join(', ') + ')' : ''}</span>
+  `;
+
   const grid = document.getElementById('job-grid');
   if(!filtered.length){
     grid.innerHTML = `<div class="empty-state">No jobs match your search/filters.</div>`;
@@ -1095,6 +1993,10 @@ function render(){
       <div class="jc-address">${escHtml(j.address)}</div>
       <div class="jc-summary">${escHtml(j.summary)}</div>
       <span class="jc-status ${j.statusClass}">${escHtml(j.status)}</span>
+      <div class="jc-badges">
+        ${j.invoiced ? '<span class="jc-badge invoiced">💷 Invoiced</span>' : ''}
+        ${j.paid ? `<span class="jc-badge paid">✅ ${escHtml(j.paid)}</span>` : ''}
+      </div>
       <div class="jc-dates">
         <span>First: ${escHtml(j.firstContact)}</span>
         <span>Latest: ${escHtml(j.lastActivity)}</span>
